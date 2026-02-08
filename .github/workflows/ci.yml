@@ -1,0 +1,53 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+    pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
+    env:
+      MONGO_URI: "mongodb://localhost:27017/testdb"
+      DATABASE_URL: "mongodb://localhost:27017"
+      DB_NAME: "testdb"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          poetry install --only-root
+          poetry install --with dev  # чтобы установить dev-зависимости (ruff, pytest и т.д.)
+
+      - name: Run ruff
+        run: |
+          poetry run ruff check .
+
+      - name: Run pytest
+        run: |
+          poetry run pytest
+

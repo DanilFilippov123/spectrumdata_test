@@ -10,11 +10,11 @@ services:
   web:
     build: .
     container_name: app
-    command: python main.py
+    command: python -m uvicorn spectrumdata_test.framework.app:app
     ports:
       - "8080:8080"
     env_file:
-      - .dev.env
+      - .env.dev
 
 volumes:
   mongo:

@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 
 from spectrumdata_test.framework.scheme import (

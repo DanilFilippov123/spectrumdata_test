@@ -38,6 +38,7 @@ class AsyncioTaskExecutor(TaskExecutor):
 
 TASKS = {}
 
+
 class AsyncioTaskQueue:
     async def parse_task_scheduler(self) -> None:
         await self._queue.join()

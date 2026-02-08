@@ -4,9 +4,7 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 from pydantic import HttpUrl
 from pytest_httpx import HTTPXMock
 from pytest_mock import MockerFixture
-from starlette.testclient import TestClient
 
-from spectrumdata_test.framework.app import app
 from spectrumdata_test.framework.scheme import ParseTaskScheme
 from spectrumdata_test.task_queue.asyncio_task_queue import TASKS
 
@@ -15,7 +13,7 @@ async def test_parser(
     mocker: MockerFixture,
     mongo_collection: AsyncIOMotorCollection,
     httpx_mock: HTTPXMock,
-async_client
+    async_client,
 ):
     example_html = """
     <!DOCTYPE html>
@@ -38,7 +36,6 @@ async_client
     </body>
     </html>
     """
-    #client = TestClient(app)
     mocker.patch(
         "spectrumdata_test.repository.mongo_repository.pages_collection",
         new=mongo_collection,
@@ -48,8 +45,10 @@ async_client
     )
     httpx_mock.add_response(text=example_html)
 
-    response = await async_client.post("/parse", data=request.model_dump_json())
-    await asyncio.gather(*(y for x in TASKS.values() for y in x.workers), return_exceptions=True)
+    response = await async_client.post("/parse", content=request.model_dump_json())
+    await asyncio.gather(
+        *(y for x in TASKS.values() for y in x.workers), return_exceptions=True
+    )
 
     assert response.status_code == 200
     pages = await mongo_collection.find().to_list()
@@ -59,5 +58,5 @@ async_client
     assert page == {
         "url": "https://example.com/",
         "content": example_html,
-        "title": "Пример HTML"
+        "title": "Пример HTML",
     }
