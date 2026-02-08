@@ -1,8 +1,8 @@
-from fetcher.interface import Fetcher
-from parser.interface import Parser
-from repository.interface import PageRepository
-from task.error import ParsePageError
-from task.interface import TaskExecutor
+from spectrumdata_test.fetcher.interface import Fetcher
+from spectrumdata_test.parser.interface import Parser
+from spectrumdata_test.repository.interface import PageRepository
+from spectrumdata_test.task.error import ParsePageError
+from spectrumdata_test.task.interface import TaskExecutor
 
 
 class ParsePagesTask:

@@ -1,6 +1,6 @@
 from httpx import AsyncClient
 
-from fetcher.interface import Fetcher, HttpResponse
+from spectrumdata_test.fetcher.interface import Fetcher, HttpResponse
 
 
 class HttpxFetcher(Fetcher):

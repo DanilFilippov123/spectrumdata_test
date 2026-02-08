@@ -1,7 +1,7 @@
 import re
 
-from db.mongo import pages_collection
-from repository.interface import PageRepository
+from spectrumdata_test.db.mongo import pages_collection
+from spectrumdata_test.repository.interface import PageRepository
 
 
 class MongoPageRepository(PageRepository):

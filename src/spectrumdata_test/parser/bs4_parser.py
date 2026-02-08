@@ -2,7 +2,7 @@ from urllib.parse import urlparse, urljoin
 
 from bs4 import BeautifulSoup
 
-from parser.interface import Parser, ParserResult
+from spectrumdata_test.parser.interface import Parser, ParserResult
 
 
 class Bs4Parser(Parser):
@@ -22,4 +22,4 @@ class Bs4Parser(Parser):
             if absolute_url.startswith("http"):
                 new_urls.append(absolute_url)
 
-        return ParserResult(title=title, body=str(body), urls=new_urls)
+        return ParserResult(title=title, body=content, urls=new_urls)

@@ -4,9 +4,9 @@ from uuid import UUID, uuid4
 
 from loguru import logger
 
-from task.error import ParsePageError
-from task.factory import make_parse_page_task
-from task.interface import TaskExecutor
+from spectrumdata_test.task.error import ParsePageError
+from spectrumdata_test.task.factory import make_parse_page_task
+from spectrumdata_test.task.interface import TaskExecutor
 
 
 async def parse_task_executor(queue: Queue, task_executor: TaskExecutor) -> None:
@@ -36,12 +36,15 @@ class AsyncioTaskExecutor(TaskExecutor):
         await self._queue.put((url, depth))
 
 
+TASKS = {}
+
 class AsyncioTaskQueue:
     async def parse_task_scheduler(self) -> None:
         await self._queue.join()
         for worker in self.workers:
             logger.debug(f"Stopping task {self._uuid} worker")
             worker.cancel()
+        del TASKS[self._uuid]
 
     def __init__(self, url: str, depth: int, max_concurrency: int) -> None:
         self._uuid = uuid4()
@@ -60,6 +63,7 @@ class AsyncioTaskQueue:
         logger.info(f"Starting task {self._uuid} - {len(self.workers)} workers")
         self._queue.put_nowait((url, 0))
         asyncio.create_task(self.parse_task_scheduler())
+        TASKS[self._uuid] = self
 
     @property
     def uuid(self) -> UUID:

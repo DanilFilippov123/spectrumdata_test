@@ -1,14 +1,14 @@
 
 from fastapi import FastAPI
 
-from framework.scheme import (
+from spectrumdata_test.framework.scheme import (
     ParseTaskScheme,
     ParseResponseSchema,
     PageScheme,
     PageContentScheme,
 )
-from repository.factory import make_page_repository
-from task_queue.asyncio_task_queue import AsyncioTaskQueue
+from spectrumdata_test.repository.factory import make_page_repository
+from spectrumdata_test.task_queue.asyncio_task_queue import AsyncioTaskQueue
 
 app = FastAPI(title="Parser")
 
