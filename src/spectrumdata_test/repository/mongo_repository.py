@@ -35,7 +35,7 @@ class MongoPageRepository(PageRepository):
         skip = (page - 1) * page_size
 
         return await (
-            pages_collection.search(query, {"url": 1, "title": 1, "_id": 0})
+            pages_collection.find(query, {"url": 1, "title": 1, "_id": 0})
             .sort("_id", 1)
             .skip(skip)
             .limit(page_size)
